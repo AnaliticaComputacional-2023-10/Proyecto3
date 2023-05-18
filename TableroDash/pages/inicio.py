@@ -22,8 +22,8 @@ inicio_layout = html.Div(children=[
     html.Br(),
 
     #Titulo de la pagina
-    html.H1(children = '''Bienvenido al Programa de Predicción de Enfermedades Cardíacas''',
-            style={'textAlign': 'center'}),
+    html.H1(children = '''Bienvenido a la aplicación para la predicción de resultados en la prueba Saber 11''',
+            style={'textAlign': 'center', 'margin-left': '20px'}),
     html.Br(),
 
     html.Br(),
