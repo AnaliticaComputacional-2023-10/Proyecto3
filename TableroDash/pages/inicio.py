@@ -2,9 +2,47 @@ from dash import html
 from apps import navigation
 import dash_bootstrap_components as dbc
 
-texto = '''  '''
+texto = ''' gvliyvliyvliuyvfliu '''
 
-texto3 = 'Aplicación creada por Santiago González y Juliana Cárdenas.'
+card_graficas = dbc.Card(
+    dbc.CardBody(
+        [
+            dbc.CardLink(
+                [
+                    html.Img(src='/assets/presentacion-grafica.png', height=65),
+                    html.Span("Información Descriptiva",
+                              className="ms-2")
+                ],
+                className="text-decoration-none h2",
+                href="/instrucciones"
+            ),
+            html.Hr(),
+            html.Div("Remote, Canada", className="small"),
+        ]
+    ),
+    className="shadow my-2",
+    style={"maxWidth": 450},
+)
+
+card_modelo = dbc.Card(
+    dbc.CardBody(
+        [
+            dbc.CardLink(
+                [
+                    html.Img(src='/assets/analisis-de-datos.png', height=65),
+                    html.Span("Modelo Predictivo",
+                              className="ms-2")
+                ],
+                className="text-decoration-none h2",
+                href="/programa"
+            ),
+            html.Hr(),
+            html.Div("Remote, Canada", className="small"),
+        ]
+    ),
+    className="shadow my-2",
+    style={"maxWidth": 550},
+)
 
 inicio_layout = html.Div(children=[
 
@@ -20,17 +58,27 @@ inicio_layout = html.Div(children=[
     html.Br(),
 
     #Parrafo
-    html.Div(children=[
-        html.Img(src='/assets/examen.png', style={'height': '20%', 'width': '20%','margin-right':'10px'}),
-        html.Div(children=[
-            html.Pre(texto, style={'text-align': 'center','padding':'1px'})
-        ], style={'margin-left': '10px'})
+    html.Div(
+        [
+        dbc.Row(
+            [
+                dbc.Col(
+                    [
+                        dbc.Container(card_graficas),
+                        dbc.Container(card_modelo),
+                    ]
+                ),
+                dbc.Col(html.Div(html.Pre('Aplicación creada por Santiago González y Juliana Cárdenas.', style={'text-align': 'center'})))
+            ]
+        ),
     ],
     style={'display': 'flex',
            'align-items': 'center',
            'justify-content': 'flex-start',
-           'margin-left': '130px'}),
+           'margin-left': '200px'}),
+
+
+
     html.Br(),
-    html.Br(),
-    html.Div(html.Pre(texto3, style={'text-align': 'center'}))
+    html.Div(html.Pre('Aplicación creada por Santiago González y Juliana Cárdenas.', style={'text-align': 'center'}))
 ])

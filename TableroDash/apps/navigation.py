@@ -7,8 +7,8 @@ navbar = dbc.Navbar(
                 [
                     dbc.Row([
                         dbc.Col([
-                            html.Img(src=dash.get_asset_url('ICFES.ico'), height="40px"),
-                            dbc.NavbarBrand("Resultados Saber 11", className="ms-2")
+                            html.Img(src=dash.get_asset_url('analisis-de-datos.png'), height="40px"),
+                            dbc.NavbarBrand("Analítica de Resultados Saber 11", className="ms-2")
                         ],
                         width={"size":"auto"})
                     ],
