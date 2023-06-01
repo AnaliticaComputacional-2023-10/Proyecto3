@@ -13,6 +13,7 @@ import dash_bootstrap_components as dbc
 from dotenv import dotenv_values
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 import psycopg2
 
 # -------------------------------------------------------------------------------------------------------------------
@@ -60,7 +61,7 @@ instrucciones_layout = html.Div(children=[
     # Titulo de la pagina
     # ------------------------------------------------
 
-    html.H1(children='''¿Cómo se comportan las variables?''',
+    html.H1(children='''Información descriptiva''',
             style={'textAlign': 'center'}),
     html.Br(),
 

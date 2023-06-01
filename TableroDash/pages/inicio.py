@@ -40,7 +40,7 @@ card_graficas = dbc.Card(
         ]
     ),
     className="shadow my-2",
-    style={"maxWidth": 500, "background-color": "#FEC868"},
+    style={"maxWidth": 500, "background-color": "#9DB2BF"},
 )
 
 
@@ -59,7 +59,7 @@ card_modelo = dbc.Card(
         ]
     ),
     className="shadow my-2",
-    style={"maxWidth": 500, "background-color": "#ABC270"},
+    style={"maxWidth": 500, "background-color": "#9DB2BF"},
 )
 
 # -------------------------------------------------------------------------------------------------------------------
@@ -132,6 +132,6 @@ inicio_layout = html.Div(children=[
                'display': 'flex',
                'justify-content': 'center'}),
     html.Br(),
-    html.Div(html.Pre(texto3, style={'text-align': 'center'}))
+    html.Div(html.Pre(texto3, style={'text-align': 'center', 'font-weight': 'bold'}))
 ])
 
