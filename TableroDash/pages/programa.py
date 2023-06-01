@@ -70,7 +70,7 @@ programa_layout = html.Div(children=[
                          dcc.Dropdown(
                              options=[
                                  {'label': 'Rural', 'value': '1'},
-                                 {'label': 'Urbano', 'value': '0'}
+                                 {'label': 'Urbana', 'value': '0'}
                              ],
                              value='',
                              id='colegio_rural'
@@ -265,17 +265,17 @@ programa_layout = html.Div(children=[
                                  {'label': 'Ninguno', 'value': '1'},
                                  {'label': 'Primaria incompleta', 'value': '2'},
                                  {'label': 'Primaria completa', 'value': '3'},
-                                 {'label': 'Secundaria (Bachillerato) incompleta',
+                                 {'label': 'Secundaria incompleta',
                                   'value': '4'},
-                                 {'label': 'Secundaria (Bachillerato) completa',
+                                 {'label': 'Secundaria completa',
                                   'value': '5'},
-                                 {'label': 'Técnica o tecnológica incompleta',
+                                 {'label': 'Técnica incompleta',
                                      'value': '6'},
-                                 {'label': 'Técnica o tecnológica completa',
+                                 {'label': 'Técnica completa',
                                      'value': '7'},
-                                 {'label': 'Educación profesional incompleta',
+                                 {'label': 'Profesional incompleta',
                                      'value': '8'},
-                                 {'label': 'Educación profesional completa',
+                                 {'label': 'Profesional completa',
                                      'value': '9'},
                                  {'label': 'Postgrado', 'value': '10'}
                              ],
@@ -295,17 +295,17 @@ programa_layout = html.Div(children=[
                                  {'label': 'Ninguno', 'value': '1'},
                                  {'label': 'Primaria incompleta', 'value': '2'},
                                  {'label': 'Primaria completa', 'value': '3'},
-                                 {'label': 'Secundaria (Bachillerato) incompleta',
+                                 {'label': 'Secundaria incompleta',
                                   'value': '4'},
-                                 {'label': 'Secundaria (Bachillerato) completa',
+                                 {'label': 'Secundaria completa',
                                   'value': '5'},
-                                 {'label': 'Técnica o tecnológica incompleta',
+                                 {'label': 'Técnica incompleta',
                                      'value': '6'},
-                                 {'label': 'Técnica o tecnológica completa',
+                                 {'label': 'Técnica completa',
                                      'value': '7'},
-                                 {'label': 'Educación profesional incompleta',
+                                 {'label': 'Profesional incompleta',
                                      'value': '8'},
-                                 {'label': 'Educación profesional completa',
+                                 {'label': 'Profesional completa',
                                      'value': '9'},
                                  {'label': 'Postgrado', 'value': '10'}
                              ],
@@ -373,7 +373,7 @@ programa_layout = html.Div(children=[
             html.Div("Puntaje esperado de ICFES:",
                      style={'font-weight': 'bold', 'font-size': 20}),
             html.Br(),
-            html.Div(' '*1000, id='data_patient'),
+            html.Div(' '*1000, id='data_student'),
             html.Br(),
             html.Br(),
 
@@ -427,7 +427,10 @@ reader = BIFReader('./Models/Modelo.bif')
 model = reader.get_model()
 model.check_model()
 
+infer = VariableElimination(model)
+
 nodos = list(model.nodes)
+
 
 # -------------------------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------------------------
@@ -440,11 +443,25 @@ nodos = list(model.nodes)
 # Funcion para Inferir
 # ------------------------------------------------
 
-def inferenceEvidence(evidence, model):
-    infer = VariableElimination(model)
+def inferenceEvidence(evidence, infer):
     prob = infer.query(variables=['puntaje'], evidence=evidence)
 
     return prob.values.tolist()
+
+
+# ------------------------------------------------
+# Funcion para clasificar
+# ------------------------------------------------
+
+def getClassification(probs):
+    maxi = 0
+    clase = 0
+    for i in range(0, 10):
+        if probs[i] > maxi:
+            maxi = probs[i]
+            clase = i
+
+    return clase
 
 
 # ------------------------------------------------
@@ -573,6 +590,23 @@ significado = {
     },
 }
 
+# ------------------------------------------------
+# List of ranges
+# ------------------------------------------------
+
+rangos = [
+    '0-50',
+    '50-100',
+    '100-150',
+    '150-200',
+    '200-250',
+    '250-300',
+    '300-350',
+    '350-400',
+    '400-450',
+    '450-500',
+]
+
 
 # -------------------------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------------------------
@@ -589,17 +623,31 @@ significado = {
     State('colegio_privado', 'value'),
     State('colegio_genero', 'value'),
     State('colegio_jornada', 'value'),
+    State('colegio_mcpio_distinto', 'value'),
+    State('presentacion_mcpio_distinto', 'value'),
     State('estudiante_genero', 'value'),
     State('familia_estrato', 'value'),
     State('madre_educacion', 'value'),
     State('padre_educacion', 'value'),
     State('computador', 'value'),
     State('internet', 'value'),
-    State('colegio_mcpio_distinto', 'value'),
-    State('num_affected_major_vessels', 'value'),
     Input('collapse-button', 'n_clicks'))
-def generate_matrix(colegio_rural, colegio_bilingue, colegio_calendario, colegio_privado, colegio_genero, colegio_jornada, estudiante_genero,
-                    familia_estrato, madre_educacion, padre_educacion, computador, internet, colegio_mcpio_distinto, presentacion_mcpio_distinto, n_clicks):
+def generate_matrix(
+        colegio_rural,
+        colegio_bilingue,
+        colegio_calendario,
+        colegio_privado,
+        colegio_genero,
+        colegio_jornada,
+        colegio_mcpio_distinto,
+        presentacion_mcpio_distinto,
+        estudiante_genero,
+        familia_estrato,
+        madre_educacion,
+        padre_educacion,
+        computador,
+        internet,
+        n_clicks):
 
     # ------------------------------------------------
     # Mensaje Introduccion Usuario
@@ -607,7 +655,7 @@ def generate_matrix(colegio_rural, colegio_bilingue, colegio_calendario, colegio
 
     if n_clicks == 0:
         lineas = [
-            'Seleccione los datos que conoce del paciente.',
+            'Llene sus datos en las opciones.',
             'Una vez ha llenado los datos conocidos presione el botón -Predecir Modelo-.',
             '-',
             'Nota: No es necesario conocer todos los datos, con al menos uno bastará.'
@@ -627,15 +675,14 @@ def generate_matrix(colegio_rural, colegio_bilingue, colegio_calendario, colegio
         'colegio_privado': colegio_privado,
         'colegio_genero': colegio_genero,
         'colegio_jornada': colegio_jornada,
+        'colegio_mcpio_distinto': colegio_mcpio_distinto,
+        'presentacion_mcpio_distinto': presentacion_mcpio_distinto,
         'estudiante_genero': estudiante_genero,
         'familia_estrato': familia_estrato,
         'madre_educacion': madre_educacion,
         'padre_educacion': padre_educacion,
         'computador': computador,
         'internet': internet,
-        'colegio_mcpio_distinto': colegio_mcpio_distinto,
-        'presentacion_mcpio_distinto': presentacion_mcpio_distinto,
-
     }
 
     # ------------------------------------------------
@@ -687,16 +734,16 @@ def generate_matrix(colegio_rural, colegio_bilingue, colegio_calendario, colegio
     # ------------------------------------------------
 
     try:
-        prob = inferenceEvidence(evidence, model)
-
+        probs = inferenceEvidence(evidence, infer)
+        rango = rangos[getClassification(probs)]
     except:
-        prob = None
+        probs = None
 
     # ------------------------------------------------
     # Error en la inferencia
     # ------------------------------------------------
 
-    if prob is None:
+    if probs is None:
         lineas = [
             'Dados los siguientes parámetros: '
         ] + [
@@ -717,54 +764,47 @@ def generate_matrix(colegio_rural, colegio_bilingue, colegio_calendario, colegio
     lineas = [
         'Dados los siguientes parámetros: '
     ] + [
-        f'{atributos[key]}: {significado[key][int(value)]}'
+        f'{significado[key][int(value)]}'
         for (key, value) in evidence.items()
     ] + [
         '-',
-        f'El puntaje esperado para el estudiante es: {round(prob[1], 2)}'
+        f'El puntaje esperado para el estudiante está entre: {rango}'
     ]
 
     # ------------------------------------------------
     # Grafico
     # ------------------------------------------------
 
-    # df_graph = pd.DataFrame(
-    #     {
-    #         'Tiene Enfermedad': [prob[1]],
-    #         'No Tiene Enfermedad': [prob[0]],
-    #     }
-    # )
+    df_graph = pd.DataFrame(
+        {'rango': rangos,
+         'probabilidad': probs
+         }
+    )
 
-    # fig = px.bar(
-    #     data_frame=df_graph,
-    #     x=['Tiene Enfermedad', 'No Tiene Enfermedad'],
-    #     orientation='h',
-    #     barmode='stack',
-    #     title='Probabilidad del Paciente de Tener Enfermedad Cardíaca',
-    #     color_discrete_sequence=['#F97B72', '#80B1D3'],
-    # )
+    fig = px.bar(
+        data_frame=df_graph,
+        y='rango',
+        x='probabilidad',
+        orientation='h',
+        title='Probabilidad de que el puntaje esté en un rango',
+        color_discrete_sequence=['#F97B72', '#80B1D3'],
+    )
 
-    # fig.update_yaxes(
-    #     showticklabels=False,
-    #     title_text='',
-    # )
+    fig.update_yaxes(
+        title_text='Rango Puntaje',
+    )
 
-    # fig.update_xaxes(
-    #     title_text='Probability',
-    # )
+    fig.update_xaxes(
+        title_text='Probabilidad',
+    )
 
-    # fig.update_layout(
-    #     legend_title='',
-    #     legend=dict(
-    #         yanchor="top",
-    #         y=1.7,
-    #         xanchor="left",
-    #         x=0
-    #     ),
-    #     height=250,
-    # )
+    fig.update_layout(
+        legend_title='',
+        # height=250,
+        xaxis_range=[0, 1]
+    )
 
-    # return generateTable(lineas), fig
+    return generateTable(lineas), fig
 
 
 # -------------------------------------------------------------------------------------------------------------------
