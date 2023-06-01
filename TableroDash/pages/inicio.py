@@ -68,7 +68,7 @@ inicio_layout = html.Div(children=[
                         dbc.Container(card_modelo),
                     ]
                 ),
-                dbc.Col(html.Div(html.Pre('Aplicación creada por Santiago González y Juliana Cárdenas.', style={'text-align': 'center'})))
+                dbc.Col(html.Div(html.Pre(texto, style={'text-align': 'center'})))
             ]
         ),
     ],
