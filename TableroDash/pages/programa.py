@@ -200,7 +200,7 @@ programa_layout = html.Div(children=[
                                  {'label': 'No', 'value': '1'}
                              ],
                              value='',
-                             id='colegio_mcpio_distinto'
+                             id='presentacion_mcpio_distinto'
                          )
                      ]), width={"size": 3}, style={'margin-left': '50px'}),
                  ], style={'padding': '10px 25px'}),
@@ -403,8 +403,393 @@ programa_layout = html.Div(children=[
 ]
 )
 
+# -------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------
+# LOAD THE MODEL
+# -------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------
+
+reader = BIFReader('../../../Models/Modelo.bif')
+model = reader.get_model()
+model.check_model()
+
+nodos = list(model.nodes)
+
+# -------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------
+# FUNCTIONS THAT HELP
+# -------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------
 
 
+# ------------------------------------------------
+# Funcion para Inferir
+# ------------------------------------------------
+
+def inferenceEvidence(evidence, model):
+    infer = VariableElimination(model)
+    prob = infer.query(variables=['puntaje'], evidence=evidence)
+
+    return prob.values.tolist()
 
 
+# ------------------------------------------------
+# Funcion para generar Tablas
+# ------------------------------------------------
 
+def generateTable(lineas):
+    rows = [html.Tr(linea) for linea in lineas]
+
+    return html.Table(rows)
+
+# -------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------
+# CONSTANTES
+# -------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------
+
+# ------------------------------------------------
+# Dictionary of variables meaning
+# ------------------------------------------------
+
+atributos = {
+    'colegio_rural': 'Zona Colegio',
+    'colegio_bilingue': 'Colegio Bilingue',
+    'colegio_calendario': 'Tipo de calendario colegio',
+    'colegio_privado': 'Colegio privado',
+    'colegio_genero': 'Colegio genero',
+    'colegio_jornada': 'Jornada del colegio',
+    'estudiante_genero': 'Genero del estudiante',
+    'familia_estrato': 'Estrato de la familia',
+    'madre_educacion': 'Nivel educativo de la madre',
+    'padre_educacion': 'Nivel educativo del padre',
+    'computador': 'Cuenta con computador la familia',
+    'internet': 'Cuenta con internet la familia',
+    'colegio_mcpio_distinto': 'El colegio esta ubicado en el municipio que vive',
+    'presentacion_mcpio_distinto': 'El estudiante presento el examen en el municipio que vive'
+}
+
+# ------------------------------------------------
+# Dictionary of variables values interpretation
+# ------------------------------------------------
+
+significado = {
+    'colegio_rural': {
+        0: 'Colegio ubicado en zona urbana',
+        1: 'Colegio ubicado en zona rural',
+    },
+    'colegio_bilingue': {
+        0: 'El colegio NO es bilingue',
+        1: 'El colegio es bilingue',
+    },
+    'colegio_calendario': {
+        1: 'Colegio calendario A',
+        2: 'Colegio calendario B',
+        3: 'Colegio presenta otro tipo de calendario',
+    },
+    'colegio_privado': {
+        0: 'El colegio NO es privado',
+        1: 'El colegio es privado',
+    },
+    'colegio_genero': {
+        1: 'El colegio es Mixto',
+        2: 'El colegio es Masculino',
+        3: 'El colegio es Femenino'
+    },
+    'colegio_jornada': {
+        1: 'La jornada del colegio es Unica',
+        2: 'La jornada del colegio es Mañana',
+        3: 'La jornada del colegio es Tarde',
+        4: 'La jornada del colegio es Noche',
+        5: 'La jornada del colegio es Completa',
+        6: 'La jornada del colegio es Sabatina',
+    },
+    'estudiante_genero': {
+        0: 'El estudiante es de genero Femenino',
+        1: 'El estudiante es de genero Masculino',
+    },
+    'familia_estrato': {
+        1: 'La familia es de estrato 1',
+        2: 'La familia es de estrato 2',
+        3: 'La familia es de estrato 3',
+        4: 'La familia es de estrato 4',
+        5: 'La familia es de estrato 5',
+        6: 'La familia es de estrato 6',
+    },
+    'madre_educacion': {
+        1: 'La madre no tiene nivel educativo',
+        2: 'La madre no completo primaria',
+        3: 'La madre completo primaria',
+        4: 'La madre no completo secundaria (Bachillerato)',
+        5: 'La madre completo secundaria (Bachillerato)',
+        6: 'La madre no completo técnica o tecnológica',
+        7: 'La madre completo técnica o tecnológica',
+        8: 'La madre no completo educación profesional',
+        9: 'La madre completo educación profesional',
+        10: 'La madre completo postgrado',
+    },
+    'padre_educacion': {
+        1: 'La padre no tiene nivel educativo',
+        2: 'La padre no completo primaria',
+        3: 'La padre completo primaria',
+        4: 'La padre no completo secundaria (Bachillerato)',
+        5: 'La padre completo secundaria (Bachillerato)',
+        6: 'La padre no completo técnica o tecnológica',
+        7: 'La padre completo técnica o tecnológica',
+        8: 'La padre no completo educación profesional',
+        9: 'La padre completo educación profesional',
+        10: 'La padre completo postgrado',
+    },
+    'computador': {
+        0: 'La familia NO tiene computador',
+        1: 'La familia tiene computador',
+    },
+    'internet': {
+        0: 'La familia NO tiene acceso a internet',
+        1: 'La familia tiene acceso a internet',
+    },
+    'colegio_mcpio_distinto': {
+        0: 'El colegio esta ubicado en el mismo municipio en el que reside',
+        1: 'El colegio NO esta ubicado en el mismo municipio en el que reside',
+    },
+    'presentacion_mcpio_distinto': {
+        0: 'El estudiante presento el examen en el mismo municipio en el que reside',
+        1: 'El estudiante NO presento el examen en el mismo municipio en el que reside',
+    },
+}
+
+
+# -------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------
+# INFERENCE
+# -------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------
+
+@app.callback(
+    Output('data_student', 'children'),
+    Output('pie-chart', 'figure'),
+    State('colegio_rural', 'value'),
+    State('colegio_bilingue', 'value'),
+    State('colegio_calendario', 'value'),
+    State('colegio_privado', 'value'),
+    State('colegio_genero', 'value'),
+    State('colegio_jornada', 'value'),
+    State('estudiante_genero', 'value'),
+    State('familia_estrato', 'value'),
+    State('madre_educacion', 'value'),
+    State('padre_educacion', 'value'),
+    State('computador', 'value'),
+    State('internet', 'value'),
+    State('colegio_mcpio_distinto', 'value'),
+    State('num_affected_major_vessels', 'value'),
+    Input('collapse-button', 'n_clicks'))
+def generate_matrix(colegio_rural, colegio_bilingue, colegio_calendario, colegio_privado, colegio_genero, colegio_jornada, estudiante_genero,
+                      familia_estrato, madre_educacion, padre_educacion, computador, internet, colegio_mcpio_distinto, presentacion_mcpio_distinto, n_clicks):
+
+    # ------------------------------------------------
+    # Mensaje Introduccion Usuario
+    # ------------------------------------------------
+
+    if n_clicks == 0:
+        lineas = [
+            'Seleccione los datos que conoce del paciente.',
+            'Una vez ha llenado los datos conocidos presione el botón -Predecir Modelo-.',
+            '-',
+            'Nota: No es necesario conocer todos los datos, con al menos uno bastará.'
+        ]
+        fig = px.pie()
+
+        return generateTable(lineas), fig
+
+    # ------------------------------------------------
+    # Dictionary of variables values
+    # ------------------------------------------------
+
+    valores = {
+        'colegio_rural': colegio_rural,
+        'colegio_bilingue': colegio_bilingue,
+        'colegio_calendario': colegio_calendario,
+        'colegio_privado': colegio_privado,
+        'colegio_genero': colegio_genero,
+        'colegio_jornada': colegio_jornada,
+        'estudiante_genero': estudiante_genero,
+        'familia_estrato': familia_estrato,
+        'madre_educacion': madre_educacion,
+        'padre_educacion': padre_educacion,
+        'computador': computador,
+        'internet': internet,
+        'colegio_mcpio_distinto': colegio_mcpio_distinto,
+        'presentacion_mcpio_distinto': presentacion_mcpio_distinto,
+
+    }
+
+    # ------------------------------------------------
+    # Dictionary of variable values filtered by not empty
+    # ------------------------------------------------
+
+    valores_filtrados = {key: value
+                         for (key, value) in valores.items()
+                         if value != '' and value is not None}
+
+    # ------------------------------------------------
+    # Dictionary of variable values discretized
+    # ------------------------------------------------
+
+    discrete_valores = valores_filtrados.copy()
+
+    # ------------------------------------------------
+    # Filter the evidence with the nodes of the model
+    # ------------------------------------------------
+
+    discrete_valores_nodes = {key: value
+                              for (key, value) in discrete_valores.items()
+                              if key in nodos}
+
+    # ------------------------------------------------
+    # Filter the evidence with the nodes of the model
+    # ------------------------------------------------
+
+    evidence = {key: str(value)
+                for (key, value) in discrete_valores_nodes.items()}
+
+    # ------------------------------------------------
+    # Sin evidencia, no se hace inferencia
+    # ------------------------------------------------
+
+    if evidence == {}:
+        lineas = [
+            'Seleccione los datos que conoce.',
+            'Una vez ha llenado los datos conocidos presione el botón -Predecir Modelo-.',
+            '-',
+            'Nota: No es necesario conocer todos los datos, con al menos uno bastará.'
+        ]
+        fig = px.pie()
+
+        return generateTable(lineas), fig
+
+    # ------------------------------------------------
+    # Inferencia con la evidencia
+    # ------------------------------------------------
+
+    try:
+        prob = inferenceEvidence(evidence, model)
+
+    except:
+        prob = None
+
+    # ------------------------------------------------
+    # Error en la inferencia
+    # ------------------------------------------------
+
+    if prob is None:
+        lineas = [
+            'Dados los siguientes parámetros: '
+        ] + [
+            f'{atributos[key]}: {significado[key][int(value)]}'
+            for (key, value) in evidence.items()
+        ] + [
+            '-',
+            f'El puntaje esperado para el estudiante no es posible calcularla ya que no hay suficientes datos'
+        ]
+        fig = px.pie()
+
+        return generateTable(lineas), fig
+
+    # ------------------------------------------------
+    # Mensaje Resultado Usuario
+    # ------------------------------------------------
+
+    lineas = [
+        'Dados los siguientes parámetros: '
+    ] + [
+        f'{atributos[key]}: {significado[key][int(value)]}'
+        for (key, value) in evidence.items()
+    ] + [
+        '-',
+        f'El puntaje esperado para el estudiante es: {round(prob[1], 2)}'
+    ]
+
+    # ------------------------------------------------
+    # Grafico
+    # ------------------------------------------------
+
+    # df_graph = pd.DataFrame(
+    #     {
+    #         'Tiene Enfermedad': [prob[1]],
+    #         'No Tiene Enfermedad': [prob[0]],
+    #     }
+    # )
+
+    # fig = px.bar(
+    #     data_frame=df_graph,
+    #     x=['Tiene Enfermedad', 'No Tiene Enfermedad'],
+    #     orientation='h',
+    #     barmode='stack',
+    #     title='Probabilidad del Paciente de Tener Enfermedad Cardíaca',
+    #     color_discrete_sequence=['#F97B72', '#80B1D3'],
+    # )
+
+    # fig.update_yaxes(
+    #     showticklabels=False,
+    #     title_text='',
+    # )
+
+    # fig.update_xaxes(
+    #     title_text='Probability',
+    # )
+
+    # fig.update_layout(
+    #     legend_title='',
+    #     legend=dict(
+    #         yanchor="top",
+    #         y=1.7,
+    #         xanchor="left",
+    #         x=0
+    #     ),
+    #     height=250,
+    # )
+
+    # return generateTable(lineas), fig
+
+
+# -------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------
+# CLEAR
+# -------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------
+
+
+# ------------------------------------------------
+# Clear Inputs
+# ------------------------------------------------
+
+@app.callback(Output('colegio_rural', 'value'),
+              Output('colegio_bilingue', 'value'),
+              Output('colegio_calendario', 'value'),
+              Output('colegio_privado', 'value'),
+              Output('colegio_genero', 'value'),
+              Output('colegio_jornada', 'value'),
+              Output('estudiante_genero', 'value'),
+              Output('familia_estrato', 'value'),
+              Output('madre_educacion', 'value'),
+              Output('padre_educacion', 'value'),
+              Output('computador', 'value'),
+              Output('internet', 'value'),
+              Output('colegio_mcpio_distinto', 'value'),
+              Output('presentacion_mcpio_distinto', 'value'),
+              [Input('button_eliminar', 'n_clicks')])
+def clear_inputs(n_clicks):
+
+    if n_clicks is not None:
+        return '', '', '', '', '', '', '', '', '', '', '', '', '', ''
+
+
+# ------------------------------------------------
+# Clear Output
+# ------------------------------------------------
+
+@app.callback(Output('output2', 'children'),
+              [Input('button_eliminar', 'n_clicks')])
+def clear_output(n_clicks):
+    if n_clicks == 0:
+        return ''
