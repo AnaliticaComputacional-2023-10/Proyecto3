@@ -170,14 +170,15 @@ programa_layout = html.Div(children=[
                      ]), width={"size": 3}, style={'margin-left': '50px'}),
                  ], style={'padding': '10px 25px'}),
 
-                  dbc.Row([
+                 dbc.Row([
 
                      # ------------------------------------------------
                      # Colegio Municipio Distinto Residencia
                      # ------------------------------------------------
 
                      dbc.Col(html.Div([
-                         html.Label('El colegio esta ubicado en el municipio que vive: '),
+                         html.Label(
+                             'El colegio esta ubicado en el municipio que vive: '),
                          dcc.Dropdown(
                              options=[
                                  {'label': 'Si', 'value': '0'},
@@ -193,7 +194,8 @@ programa_layout = html.Div(children=[
                      # ------------------------------------------------
 
                      dbc.Col(html.Div([
-                         html.Label('El examen fue presentado en el municipio en el que vive: '),
+                         html.Label(
+                             'El examen fue presentado en el municipio en el que vive: '),
                          dcc.Dropdown(
                              options=[
                                  {'label': 'Si', 'value': '0'},
@@ -250,7 +252,7 @@ programa_layout = html.Div(children=[
                      ]), width={"size": 3}, style={'margin-left': '50px'}),
                  ], style={'padding': '10px 25px'}),
 
-                  dbc.Row([
+                 dbc.Row([
 
                      # ------------------------------------------------
                      # Madre educación
@@ -263,12 +265,18 @@ programa_layout = html.Div(children=[
                                  {'label': 'Ninguno', 'value': '1'},
                                  {'label': 'Primaria incompleta', 'value': '2'},
                                  {'label': 'Primaria completa', 'value': '3'},
-                                 {'label': 'Secundaria (Bachillerato) incompleta', 'value': '4'},
-                                 {'label': 'Secundaria (Bachillerato) completa', 'value': '5'},
-                                 {'label': 'Técnica o tecnológica incompleta', 'value': '6'},
-                                 {'label': 'Técnica o tecnológica completa', 'value': '7'},
-                                 {'label': 'Educación profesional incompleta', 'value': '8'},
-                                 {'label': 'Educación profesional completa', 'value': '9'},
+                                 {'label': 'Secundaria (Bachillerato) incompleta',
+                                  'value': '4'},
+                                 {'label': 'Secundaria (Bachillerato) completa',
+                                  'value': '5'},
+                                 {'label': 'Técnica o tecnológica incompleta',
+                                     'value': '6'},
+                                 {'label': 'Técnica o tecnológica completa',
+                                     'value': '7'},
+                                 {'label': 'Educación profesional incompleta',
+                                     'value': '8'},
+                                 {'label': 'Educación profesional completa',
+                                     'value': '9'},
                                  {'label': 'Postgrado', 'value': '10'}
                              ],
                              value='',
@@ -287,12 +295,18 @@ programa_layout = html.Div(children=[
                                  {'label': 'Ninguno', 'value': '1'},
                                  {'label': 'Primaria incompleta', 'value': '2'},
                                  {'label': 'Primaria completa', 'value': '3'},
-                                 {'label': 'Secundaria (Bachillerato) incompleta', 'value': '4'},
-                                 {'label': 'Secundaria (Bachillerato) completa', 'value': '5'},
-                                 {'label': 'Técnica o tecnológica incompleta', 'value': '6'},
-                                 {'label': 'Técnica o tecnológica completa', 'value': '7'},
-                                 {'label': 'Educación profesional incompleta', 'value': '8'},
-                                 {'label': 'Educación profesional completa', 'value': '9'},
+                                 {'label': 'Secundaria (Bachillerato) incompleta',
+                                  'value': '4'},
+                                 {'label': 'Secundaria (Bachillerato) completa',
+                                  'value': '5'},
+                                 {'label': 'Técnica o tecnológica incompleta',
+                                     'value': '6'},
+                                 {'label': 'Técnica o tecnológica completa',
+                                     'value': '7'},
+                                 {'label': 'Educación profesional incompleta',
+                                     'value': '8'},
+                                 {'label': 'Educación profesional completa',
+                                     'value': '9'},
                                  {'label': 'Postgrado', 'value': '10'}
                              ],
                              value='',
@@ -308,7 +322,7 @@ programa_layout = html.Div(children=[
                  dbc.Row([html.Div("Acceso a tecnología",
                                    style={'font-weight': 'bold', 'font-size': 16, 'padding': '10px 25px'})]),
 
-                  dbc.Row([
+                 dbc.Row([
 
                      # ------------------------------------------------
                      # Computador
@@ -343,7 +357,7 @@ programa_layout = html.Div(children=[
                      ]), width={"size": 3}, style={'margin-left': '50px'}),
                  ], style={'padding': '10px 25px'})],
 
-            width={"size": 6}, style={'marginLeft': '50px'}),
+                width={"size": 6}, style={'marginLeft': '50px'}),
 
         # ------------------------------------------------
         # Columna Outputs
@@ -409,7 +423,7 @@ programa_layout = html.Div(children=[
 # -------------------------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------------------------
 
-reader = BIFReader('../../../Models/Modelo.bif')
+reader = BIFReader('./Models/Modelo.bif')
 model = reader.get_model()
 model.check_model()
 
@@ -451,6 +465,7 @@ def generateTable(lineas):
 # ------------------------------------------------
 # Dictionary of variables meaning
 # ------------------------------------------------
+
 
 atributos = {
     'colegio_rural': 'Zona Colegio',
@@ -584,7 +599,7 @@ significado = {
     State('num_affected_major_vessels', 'value'),
     Input('collapse-button', 'n_clicks'))
 def generate_matrix(colegio_rural, colegio_bilingue, colegio_calendario, colegio_privado, colegio_genero, colegio_jornada, estudiante_genero,
-                      familia_estrato, madre_educacion, padre_educacion, computador, internet, colegio_mcpio_distinto, presentacion_mcpio_distinto, n_clicks):
+                    familia_estrato, madre_educacion, padre_educacion, computador, internet, colegio_mcpio_distinto, presentacion_mcpio_distinto, n_clicks):
 
     # ------------------------------------------------
     # Mensaje Introduccion Usuario
