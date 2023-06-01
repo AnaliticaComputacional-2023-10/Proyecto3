@@ -8,20 +8,24 @@ from dash import html
 from apps import navigation
 import dash_bootstrap_components as dbc
 
-texto = '''Los resultados del ICFES son de suma importancia para el sistema educativo
- y la sociedad en general. Estas pruebas brindan una evaluación objetiva de los conocimientos
- y habilidades de los estudiantes, permitiendo identificar fortalezas y debilidades en el
- proceso de aprendizaje. Los resultados del ICFES son una herramienta fundamental para tomar
- decisiones informadas en cuanto a la calidad de la educación, la implementación de políticas
- educativas y la asignación de recursos. Además, estos resultados sirven como referencia para
- las instituciones educativas, los padres y los propios estudiantes, ya que les proporcionan
- una medida clara de su desempeño académico en comparación con otros estudiantes a nivel nacional.
- Asimismo, los resultados del ICFES son utilizados por las universidades como criterio de admisión,
- lo que resalta aún más su importancia en el ámbito educativo.
-
-Este programa se ha desarrollado mediante la exploración de datos y el modelado con
-redes bayesianas, con el fin de descubrir la relación entre 19 atributos relevantes en la base
-de datos de los resultados del ICFES.'''
+texto = '''
+ Los resultados de la Prueba Saber 11 son de suma importancia para tu futuro, por esto 
+ es importante que entiendas antes de presentar el examen como te podría ir en este.
+ 
+ 
+ Primero, te mostramos algunas estadísticas interesantes sobre el puntaje promedio en estas 
+ pruebas.
+ Podrás comparar por:
+ - Departamento
+ - Colegio en la Ciudad o Rural
+ - Estrato
+ 
+ Estos gráficos pueden darte una idea de lo que puedes esperar de tu puntaje, dado 
+ el departamento en que vives, el colegio en que estás y el estrato de tu hogar.
+ 
+ Finalmente, deberás llenar cierta información de tu colegio, de tu familia y de tu hogar. 
+ Con esto podrás obtener un rango de puntos que puedes obtener en el examen.
+'''
 
 texto3 = 'Aplicación creada por Santiago González y Juliana Cárdenas.'
 
@@ -31,7 +35,7 @@ card_graficas = dbc.Card(
             dbc.CardLink(
                 [
                     html.Img(src='/assets/presentacion-grafica.png', height=65),
-                    html.Span("Información Descriptiva",
+                    html.Span("Gráficas",
                               className="ms-2", style={"color": "white"})
                 ],
                 className="text-decoration-none h2",
@@ -82,7 +86,7 @@ inicio_layout = html.Div(children=[
     # Titulo
     # ------------------------------------------------
 
-    html.H1(children='''Bienvenido al Programa de Predicción de Enfermedades Cardíacas''',
+    html.H1(children='''Bienvenido Estudiante''',
             style={'textAlign': 'center'}),
     html.Br(),
 
@@ -117,21 +121,21 @@ inicio_layout = html.Div(children=[
         # ------------------------------------------------
 
         html.Div(children=[
-                        dbc.Container(card_graficas)],
-                ),
+            dbc.Container(card_graficas)],
+        ),
 
         # ------------------------------------------------
         # Programa
         # ------------------------------------------------
 
         html.Div(children=[
-                        dbc.Container(card_modelo)],
-                ),
+            dbc.Container(card_modelo)],
+        ),
     ],
         style={'margin-bottom': '10px',
                'display': 'flex',
                'justify-content': 'center'}),
     html.Br(),
-    html.Div(html.Pre(texto3, style={'text-align': 'center', 'font-weight': 'bold'}))
+    html.Div(html.Pre(texto3, style={
+             'text-align': 'center', 'font-weight': 'bold'}))
 ])
-

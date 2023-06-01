@@ -714,12 +714,6 @@ def generate_matrix(
     evidence = {key: str(value)
                 for (key, value) in discrete_valores_nodes.items()}
 
-    print(valores)
-    print(valores_filtrados)
-    print(discrete_valores)
-    print(discrete_valores_nodes)
-    print(evidence)
-
     # ------------------------------------------------
     # Sin evidencia, no se hace inferencia
     # ------------------------------------------------
@@ -744,9 +738,6 @@ def generate_matrix(
         rango = rangos[getClassification(probs)]
     except:
         probs = None
-
-    print(probs)
-    print(rango)
 
     # ------------------------------------------------
     # Error en la inferencia
