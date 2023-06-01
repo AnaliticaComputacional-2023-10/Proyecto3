@@ -2,7 +2,7 @@
 CREATE TABLE promedio_zona (
     zona VARCHAR(255),
     tipo VARCHAR(255),
-    punt_promedio NUMBER
+    punt_promedio FLOAT
 );
 INSERT INTO promedio_zona (zona, tipo, punt_promedio) VALUES
 ('Rural', 'Privado', 302.4471307742355),

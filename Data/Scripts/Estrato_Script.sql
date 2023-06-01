@@ -1,9 +1,9 @@
 
 CREATE TABLE promedio_estrato (
     estrato INT,
-    punt_promedio NUMBER
+    punt_promedio FLOAT
 );
-INSERT INTO promedio_zona (estrato, punt_promedio) VALUES
+INSERT INTO promedio_estrato (estrato, punt_promedio) VALUES
 (6, 307.5528710814726),
 (5, 298.2342405731282),
 (4, 287.670984787928),
