@@ -19,8 +19,8 @@ navbar = dbc.Navbar(
                         dbc.Col([
                             dbc.Nav([
                                 dbc.NavItem(dbc.NavLink("Inicio", href="/")),
-                                dbc.NavItem(dbc.NavLink("Instrucciones", href="/instrucciones")),
-                                dbc.NavItem(dbc.NavLink("Programa", href="/programa")),
+                                dbc.NavItem(dbc.NavLink("Información Descriptiva", href="/instrucciones")),
+                                dbc.NavItem(dbc.NavLink("Modelo Predictivo", href="/programa")),
                             ],
                             navbar=True
                             )
