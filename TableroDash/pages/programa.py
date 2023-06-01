@@ -280,7 +280,8 @@ programa_layout = html.Div(children=[
                                  {'label': 'Postgrado', 'value': '10'}
                              ],
                              value='',
-                             id='madre_educacion'
+                             id='madre_educacion',
+                             optionHeight=80,
                          )
                      ]), width={"size": 3}, style={'margin-left': '50px'}),
 
@@ -310,7 +311,8 @@ programa_layout = html.Div(children=[
                                  {'label': 'Postgrado', 'value': '10'}
                              ],
                              value='',
-                             id='padre_educacion'
+                             id='padre_educacion',
+                             optionHeight=80,
                          )
                      ]), width={"size": 3}, style={'margin-left': '50px'}),
                  ], style={'padding': '10px 25px'}),

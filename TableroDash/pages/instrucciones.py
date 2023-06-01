@@ -133,7 +133,7 @@ connection.close
 # Mapa
 # ------------------------------------------------
 
-df_departamento.loc[21, 'nombre'] = 'NARIÃ‘O'
+# df_departamento.loc[21, 'nombre'] = 'NARIÃ‘O'
 
 file = open('./Data/Original/ColombiaGeo.json')
 counties = json.load(file)
