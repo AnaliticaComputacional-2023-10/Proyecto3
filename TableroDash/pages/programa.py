@@ -170,6 +170,41 @@ programa_layout = html.Div(children=[
                      ]), width={"size": 3}, style={'margin-left': '50px'}),
                  ], style={'padding': '10px 25px'}),
 
+                  dbc.Row([
+
+                     # ------------------------------------------------
+                     # Colegio Municipio Distinto Residencia
+                     # ------------------------------------------------
+
+                     dbc.Col(html.Div([
+                         html.Label('El colegio esta ubicado en el municipio que vive: '),
+                         dcc.Dropdown(
+                             options=[
+                                 {'label': 'Si', 'value': '0'},
+                                 {'label': 'No', 'value': '1'}
+                             ],
+                             value='',
+                             id='colegio_mcpio_distinto'
+                         )
+                     ]), width={"size": 3}, style={'margin-left': '50px'}),
+
+                     # ------------------------------------------------
+                     # Presentacion Municipio Distinto Residencia
+                     # ------------------------------------------------
+
+                     dbc.Col(html.Div([
+                         html.Label('El examen fue presentado en el municipio en el que vive: '),
+                         dcc.Dropdown(
+                             options=[
+                                 {'label': 'Si', 'value': '0'},
+                                 {'label': 'No', 'value': '1'}
+                             ],
+                             value='',
+                             id='colegio_mcpio_distinto'
+                         )
+                     ]), width={"size": 3}, style={'margin-left': '50px'}),
+                 ], style={'padding': '10px 25px'}),
+
                  # ------------------------------------------------
                  # Información del estudiante
                  # ------------------------------------------------
@@ -306,7 +341,9 @@ programa_layout = html.Div(children=[
                              id='internet'
                          )
                      ]), width={"size": 3}, style={'margin-left': '50px'}),
-                 ], style={'padding': '10px 25px'})]),
+                 ], style={'padding': '10px 25px'})],
+
+            width={"size": 6}, style={'marginLeft': '50px'}),
 
         # ------------------------------------------------
         # Columna Outputs
