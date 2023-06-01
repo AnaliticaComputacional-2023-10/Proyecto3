@@ -306,7 +306,7 @@ programa_layout = html.Div(children=[
                              id='internet'
                          )
                      ]), width={"size": 3}, style={'margin-left': '50px'}),
-                 ], style={'padding': '10px 25px'}),
+                 ], style={'padding': '10px 25px'})]),
 
         # ------------------------------------------------
         # Columna Outputs
@@ -364,7 +364,7 @@ programa_layout = html.Div(children=[
         ),
     ]),
 ]
-)])
+)
 
 
 
