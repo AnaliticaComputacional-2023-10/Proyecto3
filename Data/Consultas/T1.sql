@@ -1,0 +1,2 @@
+SELECT cole_area_ubicacion, cole_bilingue, cole_calendario, cole_naturaleza, cole_genero, cole_jornada, cole_cod_depto_ubicacion, cole_cod_mcpio_ubicacion, estu_cod_depto_presentacion, estu_cod_mcpio_presentacion, estu_cod_reside_depto, estu_cod_reside_mcpio, estu_genero, fami_estratovivienda, fami_educacionmadre, fami_educacionpadre, fami_personashogar, fami_tienecomputador, fami_tieneinternet, punt_global
+FROM datos_crudos;
